@@ -5,6 +5,13 @@
     tools:context=".MainActivity">
 
     <item
+        android:id="@+id/action_bookmark"
+        android:orderInCategory="1"
+        android:title="@string/bookmarks"
+        android:icon="@drawable/ic_action_bookmark_white"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_sort_popular"
         android:orderInCategory="1"
         android:title="@string/popular_movies"

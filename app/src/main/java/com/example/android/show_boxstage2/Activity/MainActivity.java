@@ -1,5 +1,6 @@
 package com.example.android.show_boxstage2.Activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -161,6 +162,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 }, 1000);
 
             break;
+            case R.id.action_bookmark:
+                Intent intent = new Intent(this, BookmarksActivity.class);
+                startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
