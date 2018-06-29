@@ -1,6 +1,8 @@
 package com.example.android.show_boxstage2.Activity;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -55,6 +57,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 import static com.example.android.show_boxstage2.BuildConfig.API_KEY;
 import static com.example.android.show_boxstage2.Config.ConfigURL.CREDITS;
 import static com.example.android.show_boxstage2.Config.ConfigURL.POSTER_PATH;
@@ -99,6 +102,8 @@ public class DetailsActivity extends AppCompatActivity {
     ReviewListAdapter mReviewAdapter;
     SimilarMovieListAdapter mSimilarAdapter;
 
+    DetailsActivityViewModel detailsActivityViewModel;
+
 
 
     @SuppressLint("ObsoleteSdkInt")
@@ -113,6 +118,9 @@ public class DetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        detailsActivityViewModel = ViewModelProviders.of(this).get(DetailsActivityViewModel.class);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             Window w = getWindow();
