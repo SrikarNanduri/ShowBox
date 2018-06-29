@@ -7,7 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.android.show_boxstage2.Database.Models.MovieDetailsModel;
+import com.example.android.show_boxstage2.Database.TypeConverters.GenreConverter;
 
 @Database(entities = {MovieDetailsModel.class}, version = 1, exportSchema = false)
 @TypeConverters(GenreConverter.class)
@@ -26,6 +26,7 @@ public abstract class MovieDatabase extends RoomDatabase {
                     Log.d(LOG_TAG, "Creating new database instance");
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
                             MovieDatabase.class, MovieDatabase.DATABASE_NAME)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

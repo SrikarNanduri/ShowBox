@@ -21,6 +21,15 @@ public class Reviews_POJO implements Parcelable {
     @Expose
     private String url;
 
+    public Reviews_POJO(String author, String content, String id, String url) {
+        this.author = author;
+        this.content = content;
+        this.id = id;
+        this.url = url;
+    }
+
+
+
     public String getAuthor() {
         return author;
     }

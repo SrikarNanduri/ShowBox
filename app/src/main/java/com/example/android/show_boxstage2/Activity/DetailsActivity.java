@@ -1,7 +1,6 @@
 package com.example.android.show_boxstage2.Activity;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +27,8 @@ import com.example.android.show_boxstage2.Adaptors.ReviewListAdapter;
 import com.example.android.show_boxstage2.Adaptors.SimilarMovieListAdapter;
 import com.example.android.show_boxstage2.Adaptors.VideoListAdapter;
 import com.example.android.show_boxstage2.Config.ConfigURL;
+import com.example.android.show_boxstage2.Database.MovieDetailsModel;
+import com.example.android.show_boxstage2.Database.MovieDatabase;
 import com.example.android.show_boxstage2.Models.Cast;
 import com.example.android.show_boxstage2.Models.Credits;
 import com.example.android.show_boxstage2.Models.Genre_POJO;
@@ -59,6 +60,7 @@ import retrofit2.Response;
 
 
 import static com.example.android.show_boxstage2.BuildConfig.API_KEY;
+import static com.example.android.show_boxstage2.Config.ConfigURL.BACKDROP_PATH;
 import static com.example.android.show_boxstage2.Config.ConfigURL.CREDITS;
 import static com.example.android.show_boxstage2.Config.ConfigURL.POSTER_PATH;
 import static com.example.android.show_boxstage2.Config.ConfigURL.REVIEWS;
@@ -68,10 +70,20 @@ import static com.example.android.show_boxstage2.Config.ConfigURL.VIDEOS;
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String TAG = DetailsActivity.class.getSimpleName();
+    int bookmarkCount = 1;
+    private MovieDatabase mMovieDatabase;
+
+
 
     MovieDetails_POJO movie_details;
 
+    List<Videos_POJO> videosList;
+    List<Cast> castList;
+    List<Reviews_POJO> reviewsList;
+    List<Genre_POJO> genreList;
+
     @BindView(R.id.movie_poster_iv) ImageView poster;
+    @BindView(R.id.bookmark_border_iv) ImageView bookmark;
     @BindView(R.id.title_tv) TextView title;
     @BindView(R.id.synopsis_tv) TextView synopsis;
     @BindView(R.id.rating_tv) TextView rating;
@@ -121,6 +133,8 @@ public class DetailsActivity extends AppCompatActivity {
 
 
         detailsActivityViewModel = ViewModelProviders.of(this).get(DetailsActivityViewModel.class);
+        mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
+
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             Window w = getWindow();
@@ -197,9 +211,48 @@ public class DetailsActivity extends AppCompatActivity {
         rating.setText(user_rating);
         release.setText(outputDate);
         title.setText(title_value);
-
+        onBookmarkSelected();
         network_helper(movie_details.getid());
 
+    }
+
+
+    public void onBookmarkSelected(){
+        final String movieId = movie_details.getid();
+        final String movieTitle = movie_details.getTitle();
+        final String moviePoster = POSTER_PATH + movie_details.getPosterPath();
+        final String movieBackDrop = BACKDROP_PATH + movie_details.getBackdrop_path();
+        final String movieReleaseDate = movie_details.getReleaseDate();
+        final String movieRating = movie_details.getVoteAverage();
+        final String movieRunTime = runtime.getText().toString();
+        final String movieStatus = status.getText().toString();
+        final String movieTagline = tagline.getText().toString();
+        final String movieSynopsis = synopsis.getText().toString();
+        final List<Videos_POJO> movieTrailer = getTrailers();
+        final List<Cast> movieCast = getCast();
+        final List<Reviews_POJO> movieReview = getReview();
+        final List<Genre_POJO> movieGenre = getGenre();
+
+        final MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
+
+
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (bookmarkCount == 1) {
+                    bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
+                    bookmarkCount++;
+                    mMovieDatabase.moviesDao().bulkInsert(movieDetailsModel);
+                    Log.v("Database saved", movieDetailsModel.toString());
+                } else if (bookmarkCount == 2) {
+                    bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
+                    bookmarkCount--;
+                    mMovieDatabase.moviesDao().delete(movieDetailsModel);
+                    Log.v("Database deleted", movieDetailsModel.toString());
+                }
+            }
+        });
     }
 
 
@@ -208,6 +261,15 @@ public class DetailsActivity extends AppCompatActivity {
         mVideoRecyclerView.setLayoutManager(new GridLayoutManager(this, 1,GridLayoutManager.HORIZONTAL,false));
         mVideoRecyclerView.setHasFixedSize(true);
         mVideoRecyclerView.setAdapter(mVideoAdapter);
+        setTrailers(trailers);
+    }
+
+    private void setTrailers(List<Videos_POJO> trailers){
+        videosList = trailers;
+
+    }
+    private List<Videos_POJO> getTrailers(){
+        return videosList;
     }
 
     private void castRV(List<Cast> cast){
@@ -215,7 +277,17 @@ public class DetailsActivity extends AppCompatActivity {
         mCastRecyclerView.setLayoutManager(new GridLayoutManager(this, 1,GridLayoutManager.HORIZONTAL,false));
         mCastRecyclerView.setHasFixedSize(true);
         mCastRecyclerView.setAdapter(mCastAdapter);
+        setCast(cast);
     }
+
+    private void setCast(List<Cast> cast){
+        castList = cast;
+
+    }
+    private List<Cast> getCast(){
+        return castList;
+    }
+
 
     private void reviewRV(List<Reviews_POJO> reviews){
         mReviewAdapter = new ReviewListAdapter(this, reviews);
@@ -223,6 +295,15 @@ public class DetailsActivity extends AppCompatActivity {
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setNestedScrollingEnabled(false);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
+        setReview(reviews);
+    }
+
+    private void setReview(List<Reviews_POJO> reviews){
+        reviewsList = reviews;
+
+    }
+    private List<Reviews_POJO> getReview(){
+        return reviewsList;
     }
 
     private void similarRV(List<MovieDetails_POJO> similar){
@@ -231,6 +312,7 @@ public class DetailsActivity extends AppCompatActivity {
         mSimilarRecyclerView.setHasFixedSize(true);
         mSimilarRecyclerView.setAdapter(mSimilarAdapter);
     }
+
 
 //This is the similar movies recyclerview method helper
     private void similarMovie_network_helper(String id){
@@ -271,6 +353,7 @@ public class DetailsActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     if( response.body() != null) {
                         List<Genre_POJO> moreDetails = response.body().getGenres();
+                        setGenre(moreDetails);
                         String runTime = response.body().getRuntime();
                         String tagLine = response.body().getTagline();
                         String movieStatus = response.body().getStatus();
@@ -326,7 +409,13 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void setGenre(List<Genre_POJO> genre){
+        genreList = genre;
 
+    }
+    private List<Genre_POJO> getGenre(){
+        return genreList;
+    }
 
 
     @Override
