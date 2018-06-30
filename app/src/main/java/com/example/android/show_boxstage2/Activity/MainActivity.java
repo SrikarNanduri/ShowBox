@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.API_Key)
     TextView apiTV;
+    @BindView(R.id.home_imageholder_iv)
+    ImageView mImageView;
 
     private int sort_id = 1;
     private int NextPage = 1;
@@ -107,10 +110,14 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             if(mAdapter != null) {
                 mAdapter.clear();
             }
+            mImageView.setVisibility(VISIBLE);
+            mImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_network_check));
+            apiTV.setVisibility(VISIBLE);
             apiTV.setText("Network Not Available");
             apiTV.setTextColor(getResources().getColor(R.color.white));
             Toast.makeText(MainActivity.this, "Network Not Available", Toast.LENGTH_LONG).show();
             mProgressBar.setVisibility(GONE);
+            swipeToRefresh();
         }
     }
 
@@ -210,10 +217,14 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         MovieData_Interface apiService = ApiClient.getClient().create(MovieData_Interface.class);
         Call<MovieResponse> call = null;
         if(API_KEY.equals("Enter your API key here")){
+                  mImageView.setVisibility(VISIBLE);
+                  mImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_api_key));
                   apiTV.setText(R.string.API_key_error);
+                  apiTV.setTextSize(14);
                   mProgressBar.setVisibility(GONE);
                   swipeToRefresh();
             } else {
+            mImageView.setVisibility(GONE);
             apiTV.setVisibility(GONE);
                  switch (sort_order) {
 
@@ -302,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
        connection(isConnected);
+
     }
 
     @Override
