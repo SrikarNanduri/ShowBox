@@ -18,7 +18,7 @@ public interface MoviesDao {
     MovieDetailsModel getMoviesByID(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void bulkInsert(MovieDetailsModel movieDetailsModel);
+    void Insert(MovieDetailsModel movieDetailsModel);
 
     @Delete
     void delete(MovieDetailsModel movieDetailsModel);
