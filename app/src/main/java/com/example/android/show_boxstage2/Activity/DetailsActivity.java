@@ -240,7 +240,7 @@ public class DetailsActivity extends AppCompatActivity {
                     bookmarkCount++;
                     mMovieDatabase.moviesDao().Insert(movieDetailsModel);
                     Log.v("Database saved", movieDetailsModel.getTitle());
-                   // Log.v("Saved list", mMovieDatabase.moviesDao().getAll().getValue().get(0).getTitle());
+                    Log.v("Saved list", mMovieDatabase.moviesDao().getAll().getValue().get(0).getTitle());
                 } else if (bookmarkCount == 2) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
                     bookmarkCount--;
