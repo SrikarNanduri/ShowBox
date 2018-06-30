@@ -114,7 +114,6 @@ public class DetailsActivity extends AppCompatActivity {
     ReviewListAdapter mReviewAdapter;
     SimilarMovieListAdapter mSimilarAdapter;
 
-    DetailsActivityViewModel detailsActivityViewModel;
 
 
 
@@ -131,8 +130,6 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
-        detailsActivityViewModel = ViewModelProviders.of(this).get(DetailsActivityViewModel.class);
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
 
 
@@ -243,7 +240,7 @@ public class DetailsActivity extends AppCompatActivity {
                     bookmarkCount++;
                     mMovieDatabase.moviesDao().Insert(movieDetailsModel);
                     Log.v("Database saved", movieDetailsModel.getTitle());
-                    Log.v("Saved list", mMovieDatabase.moviesDao().getAll().getValue().get(0).getTitle());
+                   // Log.v("Saved list", mMovieDatabase.moviesDao().getAll().getValue().get(0).getTitle());
                 } else if (bookmarkCount == 2) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
                     bookmarkCount--;

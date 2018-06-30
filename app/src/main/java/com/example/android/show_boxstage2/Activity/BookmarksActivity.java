@@ -2,6 +2,7 @@ package com.example.android.show_boxstage2.Activity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,13 +56,14 @@ public class BookmarksActivity extends AppCompatActivity {
         mTextView.setText("No Bookmarks");
 
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
-        LiveData<List<MovieDetailsModel>> moviesDetailsBookmark = mMovieDatabase.moviesDao().getAll();
-        Log.v("Database data", moviesDetailsBookmark.getValue().get(0).getTagline());
-        moviesDetailsBookmark.observe(this, new Observer<List<MovieDetailsModel>>() {
+        BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
+       // Log.v("Database data", moviesDetailsBookmark.getValue().get(0).getTagline());
+
+        viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
             @Override
             public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
                 mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels);
-                Log.v(TAG,"Receiving database update here");
+                Log.v(TAG,"Receiving database update here in view model");
             }
         });
         mBookmarksRecyclerView

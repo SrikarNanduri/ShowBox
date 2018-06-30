@@ -10,7 +10,6 @@ import android.util.Log;
 import com.example.android.show_boxstage2.Database.TypeConverters.GenreConverter;
 
 @Database(entities = {MovieDetailsModel.class}, version = 1, exportSchema = false)
-@TypeConverters(GenreConverter.class)
 public abstract class MovieDatabase extends RoomDatabase {
     private static final String LOG_TAG = MovieDatabase.class.getSimpleName();
     private static final String DATABASE_NAME = "movieDetails";
@@ -26,7 +25,6 @@ public abstract class MovieDatabase extends RoomDatabase {
                     Log.d(LOG_TAG, "Creating new database instance");
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
                             MovieDatabase.class, MovieDatabase.DATABASE_NAME)
-                            .allowMainThreadQueries()
                             .build();
                 }
             }
