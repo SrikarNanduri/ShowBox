@@ -233,13 +233,11 @@ public class DetailsActivity extends AppCompatActivity {
         final List<Reviews_POJO> movieReview = getReview();
         final List<Genre_POJO> movieGenre = getGenre();
 
-        final MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
-
 
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
                 if (bookmarkCount == 1) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
                     bookmarkCount++;

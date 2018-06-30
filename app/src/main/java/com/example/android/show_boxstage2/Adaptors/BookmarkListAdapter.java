@@ -80,4 +80,8 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
             ButterKnife.bind(this,itemView);
         }
     }
+
+    public void setMovieDetails(List<MovieDetailsModel> movieList){
+        mMovieList = movieList;
+    }
 }
