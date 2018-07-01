@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import com.example.android.show_boxstage2.Adaptors.CastListAdapter;
 import com.example.android.show_boxstage2.Adaptors.ReviewListAdapter;
 import com.example.android.show_boxstage2.Adaptors.SimilarMovieListAdapter;
 import com.example.android.show_boxstage2.Adaptors.VideoListAdapter;
+import com.example.android.show_boxstage2.Config.AppExecutors;
 import com.example.android.show_boxstage2.Config.ConfigURL;
 import com.example.android.show_boxstage2.Database.MovieDetailsModel;
 import com.example.android.show_boxstage2.Database.MovieDatabase;
@@ -208,7 +210,7 @@ public class DetailsActivity extends AppCompatActivity {
         rating.setText(user_rating);
         release.setText(outputDate);
         title.setText(title_value);
-        onBookmarkSelected();
+
         network_helper(movie_details.getid());
 
     }
@@ -230,22 +232,37 @@ public class DetailsActivity extends AppCompatActivity {
         final List<Reviews_POJO> movieReview = getReview();
         final List<Genre_POJO> movieGenre = getGenre();
 
+        System.out.println(movieId + movieTitle + moviePoster+ movieSynopsis+ movieRating+ movieReleaseDate+ movieBackDrop+ movieStatus+movieRunTime+ movieTagline+ movieGenre+ movieTrailer+ movieCast+ movieReview );
 
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
+                final MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
                 if (bookmarkCount == 1) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
                     bookmarkCount++;
-                    mMovieDatabase.moviesDao().Insert(movieDetailsModel);
-                    Log.v("Database saved", movieDetailsModel.getTitle());
-                    Log.v("Saved list", mMovieDatabase.moviesDao().getAll().getValue().get(0).getTitle());
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMovieDatabase.moviesDao().Insert(movieDetailsModel);
+                            Log.v("Database saved", movieDetailsModel.getTitle());
+                           Log.v("Saved list", mMovieDatabase.moviesDao().getMoviesByID(movieId).toString());
+                        }
+                    });
+
+
+
                 } else if (bookmarkCount == 2) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
                     bookmarkCount--;
-                    mMovieDatabase.moviesDao().delete(movieDetailsModel);
-                    Log.v("Database deleted", movieDetailsModel.toString());
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMovieDatabase.moviesDao().delete(movieDetailsModel);
+                            Log.v("Database deleted", movieDetailsModel.toString());
+                        }
+                    });
+
                 }
             }
         });
@@ -395,6 +412,7 @@ public class DetailsActivity extends AppCompatActivity {
                         genres_types.setText(genre);
                     }
                     similarMovie_network_helper(id);
+                    onBookmarkSelected();
                 }
             }
 

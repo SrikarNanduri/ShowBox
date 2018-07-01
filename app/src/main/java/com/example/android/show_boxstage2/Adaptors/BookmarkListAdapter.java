@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,20 +46,21 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final BookmarkViewHolder holder, final int position) {
-        String imagePath = ConfigURL.POSTER_PATH + mMovieList.get(position).getPosterPath();
-        Picasso.with(context).load(imagePath)
+       // String imagePath = ConfigURL.POSTER_PATH + mMovieList.get(position).getPosterPath();
+        Log.v("image path", mMovieList.get(position).getPosterPath());
+        Picasso.with(context).load(mMovieList.get(position).getPosterPath())
                 .placeholder(R.drawable.ic_action_placeholder_white)
                 .into(holder.movieList);
         holder.title.setText(mMovieList.get(position).getTitle());
-        holder.movieList.setTransitionName("poster");
+      //  holder.movieList.setTransitionName("poster");
 
         holder.movieList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("movieList", (Parcelable) mMovieList.get(position));
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "poster");
-                context.startActivity(intent, optionsCompat.toBundle());
+               // ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "poster");
+                context.startActivity(intent);
             }
         });
     }

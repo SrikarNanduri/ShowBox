@@ -140,6 +140,26 @@ public class MovieDetailsModel {
 
 
 
+    @Override
+    public String toString() {
+        return "MovieDetailsModel{" +
+                "movieId='" + movieId + '\'' +
+                ", title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", overview='" + overview + '\'' +
+                ", voteAverage='" + voteAverage + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", backdrop_path='" + backdrop_path + '\'' +
+                ", status='" + status + '\'' +
+                ", runtime='" + runtime + '\'' +
+                ", tagline='" + tagline + '\'' +
+                ", genres=" + genres +
+                ", videos=" + videos +
+                ", cast=" + cast +
+                ", reviews=" + reviews +
+                '}';
+    }
+
 
 
 }

@@ -23,7 +23,7 @@ public class BookmarksActivityViewModel extends AndroidViewModel {
         super(application);
         MovieDatabase database = MovieDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
-        movieDetais = database.moviesDao().getAll();
+       // movieDetais = database.moviesDao().getAll();
     }
 
     public LiveData<List<MovieDetailsModel>> getMovieDetais() {

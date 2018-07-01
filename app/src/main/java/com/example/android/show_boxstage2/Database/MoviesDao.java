@@ -12,10 +12,10 @@ import java.util.List;
 @Dao
 public interface MoviesDao {
     @Query("SELECT * FROM  movieDetails")
-    LiveData<List<MovieDetailsModel>> getAll();
+    List<MovieDetailsModel> getAll();
 
-   /* @Query("SELECT * FROM movieDetails where movieId = :id")
-    MovieDetailsModel getMoviesByID(String id);*/
+    @Query("SELECT * FROM movieDetails where movieId = :id")
+    MovieDetailsModel getMoviesByID(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void Insert(MovieDetailsModel movieDetailsModel);

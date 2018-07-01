@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.show_boxstage2.Adaptors.BookmarkListAdapter;
+import com.example.android.show_boxstage2.Config.AppExecutors;
 import com.example.android.show_boxstage2.Database.MovieDatabase;
 import com.example.android.show_boxstage2.Database.MovieDetailsModel;
 import com.example.android.show_boxstage2.R;
@@ -56,7 +57,7 @@ public class BookmarksActivity extends AppCompatActivity {
         mTextView.setText("No Bookmarks");
 
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
-        BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
+        /*BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
        // Log.v("Database data", moviesDetailsBookmark.getValue().get(0).getTagline());
 
         viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
@@ -65,11 +66,32 @@ public class BookmarksActivity extends AppCompatActivity {
                 mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels);
                 Log.v(TAG,"Receiving database update here in view model");
             }
-        });
+        });*/
         mBookmarksRecyclerView
-                .setLayoutManager(new GridLayoutManager(this, 3));
+                .setLayoutManager(new GridLayoutManager(this, 2));
         mBookmarksRecyclerView.setHasFixedSize(true);
-        mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<MovieDetailsModel> movieDetails = mMovieDatabase.moviesDao().getAll();
+                Log.v("Bookmarks page", movieDetails.get(0).getTitle());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetails );
+                        mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
+                    }
+                });
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //mBookmarkAdapter.setMovieDetails(mMovieDatabase.moviesDao().getAll());
     }
 
     @Override
