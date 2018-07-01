@@ -21,12 +21,12 @@ public abstract class MovieDatabase extends RoomDatabase {
     public static MovieDatabase getInstance(Context context) {
         if(sInstance == null){
             synchronized (LOCK){
-                if(sInstance == null){
+
                     Log.d(LOG_TAG, "Creating new database instance");
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
                             MovieDatabase.class, MovieDatabase.DATABASE_NAME)
                             .build();
-                }
+
             }
         }
         Log.d(LOG_TAG, "Getting the database instance");

@@ -23,15 +23,25 @@ public class MovieDetailsModel {
 
     @PrimaryKey
     @NonNull
+    @ColumnInfo(name = "movieId")
     private String movieId;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "posterPath")
     private String posterPath;
+    @ColumnInfo(name = "overview")
     private String overview;
+    @ColumnInfo(name = "voteAverage")
     private String voteAverage;
+    @ColumnInfo(name = "releaseDate")
     private String releaseDate;
+    @ColumnInfo(name = "backdrop_path")
     private String backdrop_path;
+    @ColumnInfo(name = "status")
     private String status;
+    @ColumnInfo(name = "runtime")
     private String runtime;
+    @ColumnInfo(name = "tagline")
     private String tagline;
 
     //Genre
