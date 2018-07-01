@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
             break;
             case R.id.action_bookmark:
-                Intent intent = new Intent(this, BookmarksActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BookmarksActivity.class);
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

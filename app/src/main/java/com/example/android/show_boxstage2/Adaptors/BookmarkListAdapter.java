@@ -52,14 +52,15 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
                 .placeholder(R.drawable.ic_action_placeholder_white)
                 .into(holder.movieList);
         holder.title.setText(mMovieList.get(position).getTitle());
-      //  holder.movieList.setTransitionName("poster");
+        holder.movieList.setTransitionName("bookmarkPoster");
 
         holder.movieList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailsActivity.class);
-                intent.putExtra("movieList", (Parcelable) mMovieList.get(position));
-               // ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "poster");
+                intent.putExtra("bookmarkMovieList", mMovieList.get(position));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               // ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "bookmarkPoster");
                 context.startActivity(intent);
             }
         });

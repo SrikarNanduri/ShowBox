@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -37,6 +38,9 @@ public class BookmarksActivity extends AppCompatActivity {
     ProgressBar mProgressBar;
     @BindView(R.id.toolbar_bookmark)
     Toolbar mToolbar;
+
+    @BindView(R.id.bookmark_display_iv)
+    ImageView mImageView;
 
     @BindView(R.id.bookmarks_rv)
     RecyclerView mBookmarksRecyclerView;
@@ -70,19 +74,18 @@ public class BookmarksActivity extends AppCompatActivity {
         mBookmarksRecyclerView
                 .setLayoutManager(new GridLayoutManager(this, 2));
         mBookmarksRecyclerView.setHasFixedSize(true);
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+        Log.v(TAG,"Actively retriving the data from database");
+        final LiveData<List<MovieDetailsModel>> movieDetails = mMovieDatabase.moviesDao().getAll();
+        movieDetails.observe(this, new Observer<List<MovieDetailsModel>>() {
             @Override
-            public void run() {
-                final List<MovieDetailsModel> movieDetails = mMovieDatabase.moviesDao().getAll();
-                Log.v("Bookmarks page", movieDetails.get(0).getTitle());
+            public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
+                Log.d(TAG, "Reciving database update from livedata");
+                mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels );
+                mBookmarksRecyclerView.setNestedScrollingEnabled(false);
+                mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
+                mTextView.setVisibility(View.GONE);
+                mImageView.setVisibility(View.GONE);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetails );
-                        mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
-                    }
-                });
             }
         });
 

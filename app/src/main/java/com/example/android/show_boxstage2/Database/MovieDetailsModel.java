@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.example.android.show_boxstage2.Database.TypeConverters.CastConverter;
@@ -18,7 +20,7 @@ import com.example.android.show_boxstage2.Models.Videos_POJO;
 import java.util.List;
 
 @Entity(tableName = "movieDetails")
-public class MovieDetailsModel {
+public class MovieDetailsModel implements Parcelable {
 
 
     @PrimaryKey
@@ -81,6 +83,35 @@ public class MovieDetailsModel {
         this.reviews = reviews;
     }
 
+
+    protected MovieDetailsModel(Parcel in) {
+        movieId = in.readString();
+        title = in.readString();
+        posterPath = in.readString();
+        overview = in.readString();
+        voteAverage = in.readString();
+        releaseDate = in.readString();
+        backdrop_path = in.readString();
+        status = in.readString();
+        runtime = in.readString();
+        tagline = in.readString();
+        genres = in.createTypedArrayList(Genre_POJO.CREATOR);
+        videos = in.createTypedArrayList(Videos_POJO.CREATOR);
+        cast = in.createTypedArrayList(Cast.CREATOR);
+        reviews = in.createTypedArrayList(Reviews_POJO.CREATOR);
+    }
+
+    public static final Creator<MovieDetailsModel> CREATOR = new Creator<MovieDetailsModel>() {
+        @Override
+        public MovieDetailsModel createFromParcel(Parcel in) {
+            return new MovieDetailsModel(in);
+        }
+
+        @Override
+        public MovieDetailsModel[] newArray(int size) {
+            return new MovieDetailsModel[size];
+        }
+    };
 
     public String getMovieId() {
         return movieId;
@@ -161,5 +192,26 @@ public class MovieDetailsModel {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(movieId);
+        dest.writeString(title);
+        dest.writeString(posterPath);
+        dest.writeString(overview);
+        dest.writeString(voteAverage);
+        dest.writeString(releaseDate);
+        dest.writeString(backdrop_path);
+        dest.writeString(status);
+        dest.writeString(runtime);
+        dest.writeString(tagline);
+        dest.writeTypedList(genres);
+        dest.writeTypedList(videos);
+        dest.writeTypedList(cast);
+        dest.writeTypedList(reviews);
+    }
 }

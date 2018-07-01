@@ -1,6 +1,8 @@
 package com.example.android.show_boxstage2.Activity;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -78,6 +81,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 
     MovieDetails_POJO movie_details;
+    MovieDetailsModel bookmarksList;
 
     List<Videos_POJO> videosList;
     List<Cast> castList;
@@ -143,9 +147,99 @@ public class DetailsActivity extends AppCompatActivity {
         if(getIntent().getParcelableExtra("movieList") != null) {
             movie_details = getIntent().getParcelableExtra("movieList");
             movieListDetails_helper();
+        } else if(getIntent().getParcelableExtra("bookmarkMovieList") != null){
+            bookmarksList = getIntent().getParcelableExtra("bookmarkMovieList");
+            bookmarkHelper();
         }
     }
 
+    public void bookmarkHelper(){
+        String movieId = bookmarksList.getMovieId();
+        String movieTitle = bookmarksList.getTitle();
+        String moviePoster = bookmarksList.getPosterPath();
+        String movieBackdrop = bookmarksList.getBackdrop_path();
+        String movieReleaseDate = bookmarksList.getReleaseDate();
+        String movieRating = bookmarksList.getVoteAverage();
+        String movieRuntime = bookmarksList.getRuntime();
+        String movieStatus = bookmarksList.getStatus();
+        String movieTagLine = bookmarksList.getTagline();
+        String movieSynopsis = bookmarksList.getOverview();
+        List<Genre_POJO> movieGenres = bookmarksList.getGenres();
+        List<Videos_POJO> movieTrailers = bookmarksList.getVideos();
+        List<Cast> movieCast = bookmarksList.getCast();
+        List<Reviews_POJO> movieReviews = bookmarksList.getReviews();
+
+        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_element_transation));
+        poster.setTransitionName("bookmarkPoster");
+
+        Picasso.with(this).load( moviePoster)
+                .into(poster);
+
+        Picasso.with(this).load( movieBackdrop)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        backdrop.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        String outputDate = null;
+        try {
+            Date date = inputFormat.parse(movieReleaseDate);
+            outputDate = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        synopsis.setText(movieSynopsis);
+        synopsis.setEllipsize(TextUtils.TruncateAt.END);
+        synopsis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(synopsis.getMaxLines() == 4){
+                    synopsis.setEllipsize(null);
+                    synopsis.setMaxLines(100);
+                } else {
+                    if(synopsis.getMaxLines() == 100){
+                        synopsis.setEllipsize(TextUtils.TruncateAt.END);
+                        synopsis.setMaxLines(4);
+                    }
+                }
+            }
+        });
+        rating.setText(movieRating);
+        release.setText(outputDate);
+        title.setText(movieTitle);
+        String runtimeInMins = movieRuntime + getString(R.string.mins);
+        runtime.setText(runtimeInMins);
+        tagline.setText(movieTagLine);
+        status.setText(movieStatus);
+
+        String genre = "";
+        for(int i = 0; i< movieGenres.size()-1 ; i++){
+            genre += movieGenres.get(i).getName() + ", ";
+        }
+        genre += movieGenres.get(movieGenres.size()-1).getName();
+
+        genres_types.setText(genre);
+        videoRV(movieTrailers);
+        castRV(movieCast);
+        reviewRV(movieReviews);
+
+
+    }
 
     public void movieListDetails_helper ()
     {
@@ -215,6 +309,19 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
+/*    public void checkBookmark(){
+        LiveData<MovieDetailsModel> moviesList = mMovieDatabase.moviesDao().getMoviesByID(bookmarksList.getMovieId());
+        moviesList.observe(this, new Observer<MovieDetailsModel>() {
+            @Override
+            public void onChanged(@Nullable MovieDetailsModel movieDetailsModel) {
+                if(movie_details.getid() == movieDetailsModel.getMovieId()){
+                    bookmarkCount = 2;
+                } else {
+                    bookmarkCount = 1;
+                }
+            }
+        });
+    }*/
 
     public void onBookmarkSelected(){
         final String movieId = movie_details.getid();
@@ -233,7 +340,7 @@ public class DetailsActivity extends AppCompatActivity {
         final List<Genre_POJO> movieGenre = getGenre();
 
         System.out.println(movieId + movieTitle + moviePoster+ movieSynopsis+ movieRating+ movieReleaseDate+ movieBackDrop+ movieStatus+movieRunTime+ movieTagline+ movieGenre+ movieTrailer+ movieCast+ movieReview );
-
+       // checkBookmark();
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,8 +356,6 @@ public class DetailsActivity extends AppCompatActivity {
                            Log.v("Saved list", mMovieDatabase.moviesDao().getMoviesByID(movieId).toString());
                         }
                     });
-
-
 
                 } else if (bookmarkCount == 2) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
