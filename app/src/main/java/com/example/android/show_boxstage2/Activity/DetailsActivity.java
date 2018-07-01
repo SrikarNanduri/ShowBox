@@ -234,9 +234,18 @@ public class DetailsActivity extends AppCompatActivity {
         genre += movieGenres.get(movieGenres.size()-1).getName();
 
         genres_types.setText(genre);
-        videoRV(movieTrailers);
-        castRV(movieCast);
-        reviewRV(movieReviews);
+        if(movieTrailers != null){
+            videoRV(movieTrailers);
+        }
+
+        if(movieCast != null){
+            castRV(movieCast);
+        }
+
+        if(movieReviews != null){
+            reviewRV(movieReviews);
+        }
+
 
 
     }
@@ -347,7 +356,7 @@ public class DetailsActivity extends AppCompatActivity {
                 final MovieDetailsModel movieDetailsModel = new MovieDetailsModel(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, movieBackDrop, movieStatus,movieRunTime, movieTagline, movieGenre, movieTrailer, movieCast, movieReview );
                 if (bookmarkCount == 1) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
-                    bookmarkCount++;
+                    bookmarkCount = 2;
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -359,7 +368,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 } else if (bookmarkCount == 2) {
                     bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
-                    bookmarkCount--;
+                    bookmarkCount = 1;
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {

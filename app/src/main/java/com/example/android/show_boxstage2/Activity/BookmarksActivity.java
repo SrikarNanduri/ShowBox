@@ -2,6 +2,7 @@ package com.example.android.show_boxstage2.Activity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -61,25 +62,15 @@ public class BookmarksActivity extends AppCompatActivity {
         mTextView.setText("No Bookmarks");
 
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
-        /*BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
-       // Log.v("Database data", moviesDetailsBookmark.getValue().get(0).getTagline());
 
-        viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
-            @Override
-            public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
-                mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels);
-                Log.v(TAG,"Receiving database update here in view model");
-            }
-        });*/
         mBookmarksRecyclerView
                 .setLayoutManager(new GridLayoutManager(this, 2));
         mBookmarksRecyclerView.setHasFixedSize(true);
-        Log.v(TAG,"Actively retriving the data from database");
-        final LiveData<List<MovieDetailsModel>> movieDetails = mMovieDatabase.moviesDao().getAll();
-        movieDetails.observe(this, new Observer<List<MovieDetailsModel>>() {
+        BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
+        viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
             @Override
             public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
-                Log.d(TAG, "Reciving database update from livedata");
+                Log.d(TAG, "Updating list of movies from livedata in Viewmodel");
                 mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels );
                 mBookmarksRecyclerView.setNestedScrollingEnabled(false);
                 mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
@@ -88,6 +79,11 @@ public class BookmarksActivity extends AppCompatActivity {
 
             }
         });
+
+        if(mBookmarkAdapter == null){
+            mTextView.setVisibility(View.VISIBLE);
+            mImageView.setVisibility(View.VISIBLE);
+        }
 
     }
 
