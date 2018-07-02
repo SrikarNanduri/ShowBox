@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private int sort_id = 1;
     private int NextPage = 1;
     private final static String API_KEY = BuildConfig.API_KEY;
-    int resId = R.anim.layout_animation_fall_down;
 
     GridLayoutManager manager;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             spanCount = 4;
         } else {
             if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-                spanCount = 2;
+                spanCount = 3;
             }
         }
         // Manually checking internet connection
@@ -187,8 +186,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MovieListAdapter(this, movies);
         mRecyclerView.setAdapter(mAdapter);
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        mRecyclerView.setLayoutAnimation(animation);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -365,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             if(manager != null) {
-                manager.setSpanCount(2);
+                manager.setSpanCount(3);
             }
             Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }

@@ -66,7 +66,7 @@ public class BookmarksActivity extends AppCompatActivity {
             spanCount = 4;
         } else {
             if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-                spanCount = 2;
+                spanCount = 3;
             }
         }
 
