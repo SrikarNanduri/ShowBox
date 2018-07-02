@@ -24,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.android.show_boxstage2.Adaptors.CastListAdapter;
@@ -88,6 +89,11 @@ public class DetailsActivity extends AppCompatActivity {
     List<Reviews_POJO> reviewsList;
     List<Genre_POJO> genreList;
 
+    @BindView(R.id.similar_tv)
+    TextView similarMoviesHeadline;
+
+    @BindView(R.id.details_activity_sv)
+    ScrollView mScrollView;
     @BindView(R.id.movie_poster_iv) ImageView poster;
     @BindView(R.id.bookmark_border_iv) ImageView bookmark;
     @BindView(R.id.title_tv) TextView title;
@@ -171,6 +177,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_element_transation));
         poster.setTransitionName("bookmarkPoster");
+        title.setFocusable(false);
 
         Picasso.with(this).load( moviePoster)
                 .into(poster);
@@ -244,6 +251,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         if(movieReviews != null){
             reviewRV(movieReviews);
+        }else {
+            String reviewDetails = "No Reviews Available";
+            mReviewTV.setText(reviewDetails);
         }
 
 
@@ -350,6 +360,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         System.out.println(movieId + movieTitle + moviePoster+ movieSynopsis+ movieRating+ movieReleaseDate+ movieBackDrop+ movieStatus+movieRunTime+ movieTagline+ movieGenre+ movieTrailer+ movieCast+ movieReview );
        // checkBookmark();
+        Log.v("bookmarkcount", String.valueOf(bookmarkCount));
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -453,6 +464,7 @@ public class DetailsActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     if(response.body() != null){
                         List<MovieDetails_POJO> similarMovies = response.body().getResults();
+                        similarMoviesHeadline.setVisibility(View.VISIBLE);
                         similarRV(similarMovies);
                         Log.d(TAG, "number of similar movies received:" + similarMovies.size());
                     }

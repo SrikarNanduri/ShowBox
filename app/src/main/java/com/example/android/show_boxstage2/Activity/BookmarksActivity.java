@@ -30,7 +30,6 @@ import butterknife.ButterKnife;
 
 public class BookmarksActivity extends AppCompatActivity {
     private static final String TAG = BookmarksActivity.class.getSimpleName();
-    MovieDetailsModel movie_details;
     private MovieDatabase mMovieDatabase;
 
     @BindView(R.id.API_Key_bookmark)
@@ -39,10 +38,8 @@ public class BookmarksActivity extends AppCompatActivity {
     ProgressBar mProgressBar;
     @BindView(R.id.toolbar_bookmark)
     Toolbar mToolbar;
-
     @BindView(R.id.bookmark_display_iv)
     ImageView mImageView;
-
     @BindView(R.id.bookmarks_rv)
     RecyclerView mBookmarksRecyclerView;
 
@@ -63,35 +60,37 @@ public class BookmarksActivity extends AppCompatActivity {
 
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
 
-        mBookmarksRecyclerView
-                .setLayoutManager(new GridLayoutManager(this, 2));
-        mBookmarksRecyclerView.setHasFixedSize(true);
-        BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
-        viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
-            @Override
-            public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
-                Log.d(TAG, "Updating list of movies from livedata in Viewmodel");
-                mBookmarkAdapter = new BookmarkListAdapter(getApplicationContext(), movieDetailsModels );
-                mBookmarksRecyclerView.setNestedScrollingEnabled(false);
-                mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
-                mTextView.setVisibility(View.GONE);
-                mImageView.setVisibility(View.GONE);
+        bookmarkRV();
 
+
+
+
+    }
+
+public void bookmarkRV(){
+
+    mBookmarksRecyclerView
+            .setLayoutManager(new GridLayoutManager(this, 2));
+    mBookmarksRecyclerView.setHasFixedSize(true);
+    BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
+    viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
+        @Override
+        public void onChanged(@Nullable List<MovieDetailsModel> movieDetailsModels) {
+            Log.d(TAG, "Updating list of movies from livedata in Viewmodel");
+            mBookmarkAdapter = new BookmarkListAdapter(BookmarksActivity.this, movieDetailsModels );
+            mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
+            mTextView.setVisibility(View.GONE);
+            mImageView.setVisibility(View.GONE);
+            if(mBookmarkAdapter == null){
+                mTextView.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.VISIBLE);
             }
-        });
-
-        if(mBookmarkAdapter == null){
-            mTextView.setVisibility(View.VISIBLE);
-            mImageView.setVisibility(View.VISIBLE);
         }
+    });
 
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //mBookmarkAdapter.setMovieDetails(mMovieDatabase.moviesDao().getAll());
-    }
+
+}
 
     @Override
     public boolean onSupportNavigateUp() {

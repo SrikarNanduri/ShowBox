@@ -59,9 +59,9 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("bookmarkMovieList", mMovieList.get(position));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-               // ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "bookmarkPoster");
-                context.startActivity(intent);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.movieList, "bookmarkPoster");
+                context.startActivity(intent, optionsCompat.toBundle());
             }
         });
     }
@@ -86,5 +86,10 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
 
     public void setMovieDetails(List<MovieDetailsModel> movieList){
         mMovieList = movieList;
+    }
+
+    public void clear(){
+        mMovieList.clear();
+        notifyDataSetChanged();
     }
 }
