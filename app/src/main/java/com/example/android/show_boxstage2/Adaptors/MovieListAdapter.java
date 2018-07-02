@@ -52,9 +52,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         String imagePath = ConfigURL.POSTER_PATH + mMovieList.get(position).getPosterPath();
         Picasso.with(context).load(imagePath)
-                .placeholder(R.drawable.ic_action_placeholder_white)
+                .placeholder(R.drawable.ic_action_movie_placeholder)
                 .into(holder.movieList);
         holder.title.setText(mMovieList.get(position).getTitle());
+<<<<<<< HEAD
+=======
+        //holder.title.setSelected(true);
+>>>>>>> 68445cf... UI changes
         holder.movieList.setTransitionName("poster");
 
         holder.movieList.setOnClickListener(new View.OnClickListener() {
