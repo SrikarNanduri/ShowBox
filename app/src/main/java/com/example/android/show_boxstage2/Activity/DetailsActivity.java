@@ -1,17 +1,11 @@
 package com.example.android.show_boxstage2.Activity;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,7 +28,6 @@ import com.example.android.show_boxstage2.Adaptors.SimilarMovieListAdapter;
 import com.example.android.show_boxstage2.Adaptors.VideoListAdapter;
 import com.example.android.show_boxstage2.Config.AppExecutors;
 import com.example.android.show_boxstage2.Config.ConfigURL;
-import com.example.android.show_boxstage2.Database.DetailsActivityViewModelFactory;
 import com.example.android.show_boxstage2.Database.MovieDetailsModel;
 import com.example.android.show_boxstage2.Database.MovieDatabase;
 import com.example.android.show_boxstage2.Models.Cast;
