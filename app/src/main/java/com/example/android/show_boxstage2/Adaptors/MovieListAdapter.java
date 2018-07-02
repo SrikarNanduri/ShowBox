@@ -55,10 +55,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 .placeholder(R.drawable.ic_action_movie_placeholder)
                 .into(holder.movieList);
         holder.title.setText(mMovieList.get(position).getTitle());
-<<<<<<< HEAD
-=======
         //holder.title.setSelected(true);
->>>>>>> 68445cf... UI changes
+        //holder.title.setSelected(true);
         holder.movieList.setTransitionName("poster");
 
         holder.movieList.setOnClickListener(new View.OnClickListener() {
