@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+
     @BindView(R.id.recyclerview) RecyclerView mRecyclerView;
     MovieListAdapter mAdapter;
     @BindView(R.id.toolbar)
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private int sort_id = 1;
     private int NextPage = 1;
     private final static String API_KEY = BuildConfig.API_KEY;
+    int resId = R.anim.layout_animation_fall_down;
 
     GridLayoutManager manager;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -183,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MovieListAdapter(this, movies);
         mRecyclerView.setAdapter(mAdapter);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+        mRecyclerView.setLayoutAnimation(animation);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -197,6 +203,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         swipeToRefresh();
     }
 
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        mRecyclerView.scheduleLayoutAnimation();
+    }
 
     private void swipeToRefresh(){
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
