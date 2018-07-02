@@ -68,9 +68,7 @@ public class BookmarksActivity extends AppCompatActivity {
     }
 
 public void bookmarkRV(){
-
-    mBookmarksRecyclerView
-            .setLayoutManager(new GridLayoutManager(this, 2));
+    mBookmarksRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     mBookmarksRecyclerView.setHasFixedSize(true);
     BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
     viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
@@ -79,12 +77,6 @@ public void bookmarkRV(){
             Log.d(TAG, "Updating list of movies from livedata in Viewmodel");
             mBookmarkAdapter = new BookmarkListAdapter(BookmarksActivity.this, movieDetailsModels );
             mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
-            mTextView.setVisibility(View.GONE);
-            mImageView.setVisibility(View.GONE);
-            if(mBookmarkAdapter == null){
-                mTextView.setVisibility(View.VISIBLE);
-                mImageView.setVisibility(View.VISIBLE);
-            }
         }
     });
 
