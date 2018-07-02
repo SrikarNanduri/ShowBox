@@ -223,8 +223,7 @@ public class DetailsActivity extends AppCompatActivity {
         rating.setText(movieRating);
         release.setText(outputDate);
         title.setText(movieTitle);
-        String runtimeInMins = movieRuntime + getString(R.string.mins);
-        runtime.setText(runtimeInMins);
+        runtime.setText(movieRuntime);
         tagline.setText(movieTagLine);
         status.setText(movieStatus);
 
