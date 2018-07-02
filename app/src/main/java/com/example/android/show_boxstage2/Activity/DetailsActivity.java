@@ -3,6 +3,7 @@ package com.example.android.show_boxstage2.Activity;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,6 +34,7 @@ import com.example.android.show_boxstage2.Adaptors.SimilarMovieListAdapter;
 import com.example.android.show_boxstage2.Adaptors.VideoListAdapter;
 import com.example.android.show_boxstage2.Config.AppExecutors;
 import com.example.android.show_boxstage2.Config.ConfigURL;
+import com.example.android.show_boxstage2.Database.DetailsActivityViewModelFactory;
 import com.example.android.show_boxstage2.Database.MovieDetailsModel;
 import com.example.android.show_boxstage2.Database.MovieDatabase;
 import com.example.android.show_boxstage2.Models.Cast;
@@ -160,20 +162,20 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void bookmarkHelper(){
-        String movieId = bookmarksList.getMovieId();
-        String movieTitle = bookmarksList.getTitle();
-        String moviePoster = bookmarksList.getPosterPath();
-        String movieBackdrop = bookmarksList.getBackdrop_path();
-        String movieReleaseDate = bookmarksList.getReleaseDate();
-        String movieRating = bookmarksList.getVoteAverage();
-        String movieRuntime = bookmarksList.getRuntime();
-        String movieStatus = bookmarksList.getStatus();
-        String movieTagLine = bookmarksList.getTagline();
-        String movieSynopsis = bookmarksList.getOverview();
-        List<Genre_POJO> movieGenres = bookmarksList.getGenres();
-        List<Videos_POJO> movieTrailers = bookmarksList.getVideos();
-        List<Cast> movieCast = bookmarksList.getCast();
-        List<Reviews_POJO> movieReviews = bookmarksList.getReviews();
+        final String movieId = bookmarksList.getMovieId();
+        final String movieTitle = bookmarksList.getTitle();
+        final String moviePoster = bookmarksList.getPosterPath();
+        final String movieBackdrop = bookmarksList.getBackdrop_path();
+        final String movieReleaseDate = bookmarksList.getReleaseDate();
+        final String movieRating = bookmarksList.getVoteAverage();
+        final String movieRuntime = bookmarksList.getRuntime();
+        final String movieStatus = bookmarksList.getStatus();
+        final String movieTagLine = bookmarksList.getTagline();
+        final String movieSynopsis = bookmarksList.getOverview();
+        final List<Genre_POJO> movieGenres = bookmarksList.getGenres();
+        final List<Videos_POJO> movieTrailers = bookmarksList.getVideos();
+        final List<Cast> movieCast = bookmarksList.getCast();
+        final List<Reviews_POJO> movieReviews = bookmarksList.getReviews();
 
         getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_element_transation));
         poster.setTransitionName("bookmarkPoster");
@@ -256,8 +258,24 @@ public class DetailsActivity extends AppCompatActivity {
             mReviewTV.setText(reviewDetails);
         }
 
+        bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
 
-
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookmark.setImageResource(R.drawable.ic_action_bookmark_white_border);
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMovieDatabase.moviesDao().delete(bookmarksList);
+                        Log.v("Database deleted", bookmarksList.toString());
+                        getWindow().setSharedElementReturnTransition(null);
+                        getWindow().setSharedElementReenterTransition(null);
+                        poster.setTransitionName(null);
+                    }
+                });
+            }
+        });
     }
 
     public void movieListDetails_helper ()
@@ -328,20 +346,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-/*    public void checkBookmark(){
-        LiveData<MovieDetailsModel> moviesList = mMovieDatabase.moviesDao().getMoviesByID(bookmarksList.getMovieId());
-        moviesList.observe(this, new Observer<MovieDetailsModel>() {
-            @Override
-            public void onChanged(@Nullable MovieDetailsModel movieDetailsModel) {
-                if(movie_details.getid() == movieDetailsModel.getMovieId()){
-                    bookmarkCount = 2;
-                } else {
-                    bookmarkCount = 1;
-                }
-            }
-        });
-    }*/
-
     public void onBookmarkSelected(){
         final String movieId = movie_details.getid();
         final String movieTitle = movie_details.getTitle();
@@ -358,8 +362,24 @@ public class DetailsActivity extends AppCompatActivity {
         final List<Reviews_POJO> movieReview = getReview();
         final List<Genre_POJO> movieGenre = getGenre();
 
-        System.out.println(movieId + movieTitle + moviePoster+ movieSynopsis+ movieRating+ movieReleaseDate+ movieBackDrop+ movieStatus+movieRunTime+ movieTagline+ movieGenre+ movieTrailer+ movieCast+ movieReview );
-       // checkBookmark();
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final String movieDetailId = mMovieDatabase.moviesDao().getID(movieId);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(movieDetailId != null){
+                            bookmark.setImageResource(R.drawable.ic_action_bookmark_white);
+                            bookmarkCount = 2;
+                        }
+                    }
+                });
+
+            }
+        });
+
+        //System.out.println(movieId + movieTitle + moviePoster+ movieSynopsis+ movieRating+ movieReleaseDate+ movieBackDrop+ movieStatus+movieRunTime+ movieTagline+ movieGenre+ movieTrailer+ movieCast+ movieReview );
         Log.v("bookmarkcount", String.valueOf(bookmarkCount));
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override

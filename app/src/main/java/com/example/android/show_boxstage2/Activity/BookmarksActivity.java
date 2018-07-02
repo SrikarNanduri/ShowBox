@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class BookmarksActivity extends AppCompatActivity {
     RecyclerView mBookmarksRecyclerView;
 
     BookmarkListAdapter mBookmarkAdapter;
+    int spanCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,14 @@ public class BookmarksActivity extends AppCompatActivity {
         mTextView.setText("No Bookmarks");
 
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
+        Configuration newConfig = getResources().getConfiguration();
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            spanCount = 4;
+        } else {
+            if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+                spanCount = 2;
+            }
+        }
 
         bookmarkRV();
 
@@ -68,7 +78,7 @@ public class BookmarksActivity extends AppCompatActivity {
     }
 
 public void bookmarkRV(){
-    mBookmarksRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+    mBookmarksRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
     mBookmarksRecyclerView.setHasFixedSize(true);
     BookmarksActivityViewModel viewModel = ViewModelProviders.of(this).get(BookmarksActivityViewModel.class);
     viewModel.getMovieDetais().observe(this, new Observer<List<MovieDetailsModel>>() {
