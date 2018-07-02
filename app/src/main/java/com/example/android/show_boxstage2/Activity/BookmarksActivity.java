@@ -73,8 +73,6 @@ public class BookmarksActivity extends AppCompatActivity {
         bookmarkRV();
 
 
-
-
     }
 
 public void bookmarkRV(){
@@ -87,6 +85,13 @@ public void bookmarkRV(){
             Log.d(TAG, "Updating list of movies from livedata in Viewmodel");
             mBookmarkAdapter = new BookmarkListAdapter(BookmarksActivity.this, movieDetailsModels );
             mBookmarksRecyclerView.setAdapter(mBookmarkAdapter);
+            if(movieDetailsModels.size() == 0) {
+                mTextView.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.VISIBLE);
+            } else {
+                mTextView.setVisibility(View.GONE);
+                mImageView.setVisibility(View.GONE);
+            }
         }
     });
 
