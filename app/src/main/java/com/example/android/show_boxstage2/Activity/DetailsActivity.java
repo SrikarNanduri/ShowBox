@@ -172,7 +172,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_element_transation));
         poster.setTransitionName("bookmarkPoster");
-        title.setFocusable(false);
 
         Picasso.with(this).load( moviePoster)
                 .into(poster);

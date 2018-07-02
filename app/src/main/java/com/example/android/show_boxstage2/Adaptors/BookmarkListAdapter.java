@@ -46,8 +46,6 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final BookmarkViewHolder holder, final int position) {
-       // String imagePath = ConfigURL.POSTER_PATH + mMovieList.get(position).getPosterPath();
-        Log.v("image path", mMovieList.get(position).getPosterPath());
         Picasso.with(context).load(mMovieList.get(position).getPosterPath())
                 .placeholder(R.drawable.ic_action_placeholder_white)
                 .into(holder.movieList);
