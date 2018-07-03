@@ -115,6 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView mTrailersTV;
 
 
+
     @BindView(R.id.video_rv)
     RecyclerView mVideoRecyclerView;
     @BindView(R.id.cast_rv)
