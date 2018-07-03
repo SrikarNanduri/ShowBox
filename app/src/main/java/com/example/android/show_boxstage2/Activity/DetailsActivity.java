@@ -111,6 +111,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView mReviewTV;
     @BindView(R.id.share_ib)
     ImageButton mShare;
+    @BindView(R.id.trailers_tv)
+    TextView mTrailersTV;
 
 
     @BindView(R.id.video_rv)
@@ -295,12 +297,12 @@ public class DetailsActivity extends AppCompatActivity {
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        backdrop.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        backdrop.setBackground(new BitmapDrawable(getApplication().getResources(),bitmap));
                     }
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-
+                        backdrop.setBackgroundDrawable(errorDrawable);
                     }
 
                     @Override
@@ -481,9 +483,13 @@ public class DetailsActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     if(response.body() != null){
                         List<MovieDetails_POJO> similarMovies = response.body().getResults();
-                        similarMoviesHeadline.setVisibility(View.VISIBLE);
-                        similarRV(similarMovies);
-                        Log.d(TAG, "number of similar movies received:" + similarMovies.size());
+                        if(similarMovies.size() !=0) {
+                            similarMoviesHeadline.setVisibility(View.VISIBLE);
+                            similarRV(similarMovies);
+                            Log.d(TAG, "number of similar movies received:" + similarMovies.size());
+                        } else {
+                            similarMoviesHeadline.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
@@ -535,6 +541,9 @@ public class DetailsActivity extends AppCompatActivity {
                             // A recycler view to set trailers
                             Log.v("Video thumbnail URL", "https://img.youtube.com/vi/" + trailers.get(0).getKey() + "/0.jpg");
                             videoRV(trailers);
+                        } else {
+                            String trailerDetails = "No Trailers Available";
+                            mTrailersTV.setText(trailerDetails);
                         }
 
                         Credits credits = response.body().getCredits();
@@ -562,13 +571,18 @@ public class DetailsActivity extends AppCompatActivity {
                         tagline.setText(tagLine);
                         status.setText(movieStatus);
 
-                        String genre = "";
-                        for(int i = 0; i< moreDetails.size()-1 ; i++){
-                           genre += moreDetails.get(i).getName() + ", ";
-                        }
-                        genre += moreDetails.get(moreDetails.size()-1).getName();
+                        if(moreDetails.size() != 0) {
+                            String genre = "";
+                            for (int i = 0; i < moreDetails.size() - 1; i++) {
+                                genre += moreDetails.get(i).getName() + ", ";
+                            }
+                            genre += moreDetails.get(moreDetails.size() - 1).getName();
 
-                        genres_types.setText(genre);
+                            genres_types.setText(genre);
+                        } else {
+                            String genreDetails = "No Genre Available";
+                            genres.setText(genreDetails);
+                        }
                     }
                     similarMovie_network_helper(id);
                     onBookmarkSelected();

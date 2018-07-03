@@ -23,4 +23,10 @@
         android:title="@string/top_rated"
         app:showAsAction="collapseActionView"/>
 
+    <item
+        android:id="@+id/action_sort_upcoming"
+        android:orderInCategory="1"
+        android:title="@string/upcoming"
+        app:showAsAction="collapseActionView"/>
+
 </menu>

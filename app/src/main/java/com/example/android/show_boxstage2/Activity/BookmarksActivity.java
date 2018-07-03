@@ -63,7 +63,7 @@ public class BookmarksActivity extends AppCompatActivity {
         mMovieDatabase = MovieDatabase.getInstance(getApplicationContext());
         Configuration newConfig = getResources().getConfiguration();
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            spanCount = 4;
+            spanCount = 5;
         } else {
             if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
                 spanCount = 3;

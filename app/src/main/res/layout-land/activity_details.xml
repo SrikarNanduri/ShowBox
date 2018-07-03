@@ -16,6 +16,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="16dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:descendantFocusability="beforeDescendants"
     >
 
     <FrameLayout
@@ -26,7 +29,7 @@
         <LinearLayout
             android:id="@+id/backdrop_ll"
             android:layout_width="match_parent"
-            android:layout_height="198dp"
+            android:layout_height="200dp"
             android:orientation="horizontal"
             android:tint="#6F000000"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +39,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="198dp"
+            android:layout_height="200dp"
             android:background="@drawable/gradient"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -391,6 +394,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/similar_tv" />
+
+    <ImageButton
+        android:id="@+id/share_ib"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:background="@color/background"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/video_rv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/trailers_tv"
+        app:layout_constraintTop_toBottomOf="@+id/view_trailer"
+        app:layout_constraintVertical_bias="0.571"
+        card_view:srcCompat="@drawable/ic_action_share" />
 
 </android.support.constraint.ConstraintLayout>
 </ScrollView>

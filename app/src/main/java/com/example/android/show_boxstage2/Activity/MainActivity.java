@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         Configuration newConfig = getResources().getConfiguration();
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            spanCount = 4;
+            spanCount = 5;
         } else {
             if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
                 spanCount = 3;
@@ -141,7 +141,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                     movies.clear();
                     mAdapter.notifyDataSetChanged();
                 }
-                mProgressBar.setVisibility(VISIBLE);
+                if(API_KEY.equals("Enter your API key here")){
+                    mProgressBar.setVisibility(GONE);
+                } else {
+                    mProgressBar.setVisibility(VISIBLE);
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -159,7 +163,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                     movies.clear();
                     mAdapter.notifyDataSetChanged();
                 }
-                mProgressBar.setVisibility(VISIBLE);
+                if(API_KEY.equals("Enter your API key here")){
+                    mProgressBar.setVisibility(GONE);
+                } else {
+                    mProgressBar.setVisibility(VISIBLE);
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -175,6 +183,31 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             case R.id.action_bookmark:
                 Intent intent = new Intent(getApplicationContext(), BookmarksActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.action_sort_upcoming:
+                getSupportActionBar().setTitle("Upcoming");
+                if(movies != null) {
+                    movies.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+                if(API_KEY.equals("Enter your API key here")){
+                    mProgressBar.setVisibility(GONE);
+                } else {
+                    mProgressBar.setVisibility(VISIBLE);
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sort_id = 3;
+                        NextPage = 1;
+
+                        movieFeed(sort_id);
+
+                        mProgressBar.setVisibility(GONE);
+                    }
+                }, 1000);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -244,6 +277,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                         call = apiService.getTopRatedMovies(NextPage, API_KEY);
                         Log.v("page of top rated", String.valueOf(NextPage));
                         break;
+                     case 3:
+                         call = apiService.getUpcoming(NextPage, API_KEY);
+                         Log.v("page of top rated", String.valueOf(NextPage));
+                         break;
     }
 
     Log.d("API Key:", API_KEY);
@@ -357,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if(manager != null) {
-                manager.setSpanCount(4);
+                manager.setSpanCount(5);
             }
             Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
