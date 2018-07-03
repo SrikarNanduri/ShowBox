@@ -1,6 +1,7 @@
 package com.example.android.show_boxstage2.Activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,10 +18,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.show_boxstage2.Adaptors.CastListAdapter;
 import com.example.android.show_boxstage2.Adaptors.ReviewListAdapter;
@@ -66,6 +69,7 @@ import static com.example.android.show_boxstage2.Config.ConfigURL.CREDITS;
 import static com.example.android.show_boxstage2.Config.ConfigURL.POSTER_PATH;
 import static com.example.android.show_boxstage2.Config.ConfigURL.REVIEWS;
 import static com.example.android.show_boxstage2.Config.ConfigURL.VIDEOS;
+import static com.example.android.show_boxstage2.Config.ConfigURL.VIDEOS_PATH;
 
 
 public class DetailsActivity extends AppCompatActivity {
@@ -105,6 +109,8 @@ public class DetailsActivity extends AppCompatActivity {
     Toolbar mToolbar;
     @BindView(R.id.review_tv)
     TextView mReviewTV;
+    @BindView(R.id.share_ib)
+    ImageButton mShare;
 
 
     @BindView(R.id.video_rv)
@@ -507,7 +513,23 @@ public class DetailsActivity extends AppCompatActivity {
                         String runTime = response.body().getRuntime();
                         String tagLine = response.body().getTagline();
                         String movieStatus = response.body().getStatus();
-                        Videos videos = response.body().getVideos();
+                        final Videos videos = response.body().getVideos();
+                        mShare.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                               Intent intent = new Intent(Intent.ACTION_SEND);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_STREAM, "Show Box");
+                                if(videos.getResults().size() != 0) {
+                                    String link = "Check out the trailer of " + movie_details.getTitle() + ": ";
+                                    link = link + VIDEOS_PATH + videos.getResults().get(0).getKey();
+                                    intent.putExtra(Intent.EXTRA_TEXT, link);
+                                    startActivity(Intent.createChooser(intent, "Share Image"));
+                                } else {
+                                    Toast.makeText(DetailsActivity.this, "No Links Available", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                         if(videos.getResults().size() != 0) {
                             List<Videos_POJO> trailers = videos.getResults();
                             // A recycler view to set trailers
