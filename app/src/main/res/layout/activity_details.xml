@@ -413,5 +413,4 @@
             card_view:srcCompat="@drawable/ic_action_share" />
 
     </android.support.constraint.ConstraintLayout>
-
 </ScrollView>
